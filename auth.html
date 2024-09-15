@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Signup</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Reset and global styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f7efe5;
+            color: #333;
+        }
+
+        /* Main container */
+        .container {
+            width: 400px;
+            height: 350px;
+            margin: 50px auto;
+            margin-top: 100px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Toggle buttons for switching forms */
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .toggle-btn {
+            background-color: #674188;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-btn:hover {
+            background-color: #c8a1e0;
+        }
+
+        /* Form styles */
+        form {
+            display: none;
+        }
+
+        form.active {
+            display: block;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-container input {
+            margin-right: 5px;
+        }
+
+        .show-password {
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #674188;
+            color: #fff;
+            padding: 10px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 75px;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #c8a1e0;
+        }
+
+        /* Error message styles */
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Captured Moments</div>
+            <button class="toggle-button">&#9776;</button>
+            <div class="nav-links-container">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="toggle-container">
+            <button class="toggle-btn" onclick="showForm('login')">Login</button>
+            <button class="toggle-btn" onclick="showForm('signup')">Signup</button>
+        </div>
+
+        <!-- Error message container -->
+        <div id="error-message" class="error-message"></div>
+
+        <!-- Login Form -->
+        <form id="login-form">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" id="login-password" required>
+            <div class="checkbox-container">
+                <input type="checkbox" id="login-show-password">
+                <label for="login-show-password" class="show-password">Show Password</label>
+            </div>
+            <input type="submit" name="login" value="Login">
+        </form>
+
+        <!-- Signup Form -->
+        <form id="signup-form">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" id="signup-password" required>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" id="signup-confirm-password" required>
+            <div class="checkbox-container">
+                <input type="checkbox" id="signup-show-password">
+                <label for="signup-show-password" class="show-password">Show Password</label>
+            </div>
+            <input type="submit" name="signup" value="Signup">
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Captured Moments. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function showForm(formType) {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+    
+            if (formType === 'login') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+            }
+        }
+    
+        function togglePasswordVisibility(event, passwordFieldId) {
+            const passwordField = document.getElementById(passwordFieldId);
+            passwordField.type = event.target.checked ? 'text' : 'password';
+        }
+    
+        document.getElementById('login-show-password').addEventListener('change', function(event) {
+            togglePasswordVisibility(event, 'login-password');
+        });
+    
+        document.getElementById('signup-show-password').addEventListener('change', function(event) {
+            const signupPassword = document.getElementById('signup-password');
+            const signupConfirmPassword = document.getElementById('signup-confirm-password');
+            const show = event.target.checked;
+            signupPassword.type = show ? 'text' : 'password';
+            signupConfirmPassword.type = show ? 'text' : 'password';
+        });
+    
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+    
+            fetch('login_signup.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(text => {
+                console.log(text); // Log the response for debugging
+                return JSON.parse(text); // Parse the response as JSON
+            })
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('error-message').textContent = data.error;
+                } else if (data.success) {
+                    window.location.href = 'crud.html';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+    
+            fetch('login_signup.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(text => {
+                console.log(text); // Log the response for debugging
+                return JSON.parse(text); // Parse the response as JSON
+            })
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('error-message').textContent = data.error;
+                } else if (data.success) {
+                    window.location.href = 'crud.html';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    
+        // Show login form by default when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            showForm('login');
+        });
+    </script>
+    
+    
+</body>
+</html>
