@@ -51,6 +51,37 @@ body {
     margin: 5px 0;
 }
 
+.mail{
+    color: blue;
+}
+
+.mail a{
+    text-decoration: none;
+}
+
+.mail a:hover{
+    text-decoration: underline;
+    transition: 0.2s ease-out;
+    font-size: large;
+}
+.overview{
+    text-align: justify;
+    color: #fff;
+    margin-top: 1rem;
+}
+.explore a{
+    color: #674188;
+    text-decoration: none;
+}
+
+.explore a:hover{
+    transition: 0.2s ease;
+    text-transform: uppercase;
+    background-color: #674188;
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 10px;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .photographer-container {
